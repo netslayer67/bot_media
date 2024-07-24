@@ -75,7 +75,7 @@ async function connectionLogic() {
                     const conversation = message.message.conversation;
 
                     // Pattern regex untuk mencocokkan format pesan
-                    const regex = /Nama Lengkap\s*:\s*(.+)\nDomisili\s*:\s*(.+)\nUsia\s*:\s*(\d+)/i;
+                    const regex = /Nama\s*:\s*(.+)\nDomisili\s*:\s*(.+)\nUsia\s*:\s*(\d+)/i;
                     const match = conversation.match(regex);
 
                     if (match) {
