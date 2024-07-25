@@ -71,29 +71,23 @@ async function connectionLogic() {
             if (message.message && message.message.conversation) {
                 console.log('Message Conversation:', message.message.conversation);
                 // Jika pesan adalah "Halo! Bisakah saya mendapatkan info selengkapnya tentang ini?"
-                if (message.message.conversation) {
-                    const conversation = message.message.conversation;
+                if (message.message.conversation.includes('𝗛𝗮𝗹𝗹𝗼 𝗦𝗼𝗯𝗮𝘁 𝗚𝗮𝗹𝗯𝗮𝘆') || (message.message.conversation.toLocaleLowerCase().includes('nama lengkap') && message.message.conversation.toLocaleLowerCase().includes('usia') && message.message.conversation.toLocaleLowerCase().includes('domisili') && message.message.conversation.toLocaleLowerCase().includes('nomor hp'))) {
+                    // Ekstrak nama pengguna dari pesan
+                    const nameMatch = message.message.conversation.match(/Nama Lengkap : (\w+)/i);
+                    const userName = nameMatch ? nameMatch[1] : 'User';
 
-                    // Pattern regex untuk mencocokkan format pesan
-                    const regex = /Nama\s*:\s*(.+)\nDomisili\s*:\s*(.+)\nUsia\s*:\s*(\d+)/i;
-                    const match = conversation.match(regex);
-
-                    if (match) {
-                        const [_, name, domisili, age] = match;
-
-                        const responseMessage1 = {
-                            text: `Halo ${name}, Saya Jilliyan Tim Edukasi Malahayati Consultant`
+                    // Kirim pesan balasan
+                    const responseMessage = {
+                        text: `Halo ${userName}, Saya Jilliyan Tim Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
+                    };
+                    sock.sendMessage(message.key.remoteJid, responseMessage);
+                    setTimeout(() => {
+                        // Kirim pesan kedua
+                        const responseMessage2 = {
+                            text: "Silahkan ketik angka di bawah ini :\n📲Ketik 1 untuk info Legalitas\n📲Ketik 2 untuk info cara kerja\n📲Ketik 3 untuk info cara kerja antar kota\n📲Ketik 4 untuk info yang sudah galbay\n📲Ketik 5 untuk info ongkos jasa\n📲Ketik 6 untuk isi Form Pendaftaran\nAdmin akan segera merespon setelah pengisian Form Pendaftaran"
                         };
-
-                        sock.sendMessage(message.key.remoteJid, responseMessage1);
-                        setTimeout(() => {
-                            // Kirim pesan kedua
-                            const responseMessage2 = {
-                                text: "Silahkan ketik angka di bawah ini untuk informasi lebih lanjut:\n📲Ketik 1 untuk info Legalitas\n📲Ketik 2 untuk info cara kerja\n📲Ketik 3 untuk info cara kerja antar kota\n📲Ketik 4 untuk info yang sudah galbay\n📲Ketik 5 untuk info ongkos jasa\n📲Ketik 6 untuk isi Form Pendaftaran\nAdmin akan segera merespon setelah pengisian Form Pendaftaran"
-                            };
-                            sock.sendMessage(message.key.remoteJid, responseMessage2);
-                        }, 500);
-                    }
+                        sock.sendMessage(message.key.remoteJid, responseMessage2);
+                    }, 500);
                 }
                 if (validNumbers.includes(conversation)) {
                     if (message.message.conversation === '1') {
