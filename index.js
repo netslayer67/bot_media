@@ -66,21 +66,57 @@ async function connectionLogic() {
             const validNumbers = ['1', '2', '3', '4', '5', '6'];
             const invalidNumbers = ['7', '8', '9', '0'];
             const conversation = message.message?.conversation;
-
-
             if (message.message && message.message.conversation) {
                 console.log('Message Conversation:', message.message.conversation);
                 // Jika pesan adalah "Halo! Bisakah saya mendapatkan info selengkapnya tentang ini?"
-                if (message.message.conversation.includes('𝗛𝗮𝗹𝗹𝗼 𝗦𝗼𝗯𝗮𝘁 𝗚𝗮𝗹𝗯𝗮𝘆') || (message.message.conversation.toLocaleLowerCase().includes('nama lengkap') && message.message.conversation.toLocaleLowerCase().includes('usia') && message.message.conversation.toLocaleLowerCase().includes('domisili') && message.message.conversation.toLocaleLowerCase().includes('nomor hp'))) {
-                    // Ekstrak nama pengguna dari pesan
-                    const nameMatch = message.message.conversation.match(/Nama Lengkap : (\w+)/i);
-                    const userName = nameMatch ? nameMatch[1] : 'User';
+                if (message.message.conversation.includes('𝗛𝗮𝗹𝗹𝗼 𝗦𝗼𝗯𝗮𝘁 𝗚𝗮𝗹𝗯𝗮𝘆') ||
+                    (message.message.conversation.toLocaleLowerCase().includes('nama lengkap') &&
+                        message.message.conversation.toLocaleLowerCase().includes('usia') &&
+                        message.message.conversation.toLocaleLowerCase().includes('domisili') &&
+                        message.message.conversation.toLocaleLowerCase().includes('nomor hp'))) {
 
-                    // Kirim pesan balasan
-                    const responseMessage = {
-                        text: `Halo ${userName}, Saya Jilliyan Tim Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
+                    // Ekstrak informasi pengguna dari pesan
+                    const nameMatch = message.message.conversation.match(/Nama Lengkap : (.*)/i);
+                    const ageMatch = message.message.conversation.match(/Usia : (.*)/i);
+                    const domisiliMatch = message.message.conversation.match(/Domisili : (.*)/i);
+                    const phoneMatch = message.message.conversation.match(/Nomor Hp : (.*)/i);
+
+                    const userName = nameMatch ? nameMatch[1].trim() : '';
+                    const userAge = ageMatch ? ageMatch[1].trim() : '';
+                    const userDomisili = domisiliMatch ? domisiliMatch[1].trim() : '';
+                    const userPhone = phoneMatch ? phoneMatch[1].trim() : '';
+
+                    // Periksa apakah nama lengkap, usia, domisili, dan nomor HP tidak kosong
+                    if (userName && userAge && userDomisili && userPhone) {
+                        // Kirim pesan balasan jika semua data terisi
+                        const responseMessage = {
+                            text: `Halo ${userName}, Saya Jilliyan Tim Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
+                        };
+                        sock.sendMessage(message.key.remoteJid, responseMessage);
+
+                        setTimeout(() => {
+                            // Kirim pesan kedua
+                            const responseMessage2 = {
+                                text: "Silahkan ketik angka di bawah ini :\n📲Ketik 1 untuk info Legalitas\n📲Ketik 2 untuk info cara kerja\n📲Ketik 3 untuk info cara kerja antar kota\n📲Ketik 4 untuk info yang sudah galbay\n📲Ketik 5 untuk info ongkos jasa\n📲Ketik 6 untuk isi Form Pendaftaran\nAdmin akan segera merespon setelah pengisian Form Pendaftaran"
+                            };
+                            sock.sendMessage(message.key.remoteJid, responseMessage2);
+                        }, 500);
+                    } else {
+                        // Kirim pesan balasan jika ada data yang kosong
+                        const responseMessage = {
+                            text: 'Halo, silahkan isi identitas diatas ya, agar kita bisa memproses konsultasi lebih lanjut🙏'
+                        };
+                        sock.sendMessage(message.key.remoteJid, responseMessage);
+                    }
+                } else if (message.message.conversation.toLocaleLowerCase() === 'info') {
+                    // Format pesan untuk dikirim
+                    const responseMessage1 = {
+                        text: '*Hallo, saya Rocket Bot🚀 Asisten kamu*.\nBerikut kumpulan informasi yang sudah kami siapkan'
                     };
-                    sock.sendMessage(message.key.remoteJid, responseMessage);
+
+                    // Kirim pesan
+                    sock.sendMessage(message.key.remoteJid, responseMessage1);
+
                     setTimeout(() => {
                         // Kirim pesan kedua
                         const responseMessage2 = {
@@ -89,6 +125,7 @@ async function connectionLogic() {
                         sock.sendMessage(message.key.remoteJid, responseMessage2);
                     }, 500);
                 }
+
                 if (validNumbers.includes(conversation)) {
                     if (message.message.conversation === '1') {
                         // Kirim gambar yang telah disiapkan
