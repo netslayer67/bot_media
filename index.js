@@ -90,7 +90,7 @@ async function connectionLogic() {
                     if (userName && userAge && userDomisili && userPhone) {
                         // Kirim pesan balasan jika semua data terisi
                         const responseMessage = {
-                            text: `Halo ${userName}, Saya Jilliyan Tim Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
+                            text: `Halo ${userName}, Saya Anisa Admin Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
                         };
                         sock.sendMessage(message.key.remoteJid, responseMessage);
 
