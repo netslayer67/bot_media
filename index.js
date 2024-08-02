@@ -89,6 +89,13 @@ async function connectionLogic() {
 
                     // Periksa apakah nama lengkap, usia, domisili, dan nomor HP tidak kosong
                     if (userName && userAge && userDomisili && userPhone) {
+                        const key = {
+                            remoteJid: message.key.remoteJid,
+                            id: message.key.id, // id dari pesan yang ingin ditandai sebagai dibaca
+                            participant: message.key.participant, // ID pengguna yang mengirim pesan (undefined untuk chat individu)
+                        };
+
+                        sock.readMessages([key]);
                         // Kirim pesan balasan jika semua data terisi
                         const responseMessage = {
                             text: `Halo ${userName}, Saya Anisa Admin Edukasi Malahayati Consultant, Saat ini anda sedang dalam layanan tim edukasi malahayati consultant`
@@ -125,6 +132,7 @@ async function connectionLogic() {
                         };
                         sock.sendMessage(message.key.remoteJid, responseMessage2);
                     }, 500);
+
                 }
 
 
