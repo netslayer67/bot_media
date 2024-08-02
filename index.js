@@ -76,15 +76,16 @@ async function connectionLogic() {
                         message.message.conversation.toLocaleLowerCase().includes('nomor hp'))) {
 
                     // Ekstrak informasi pengguna dari pesan
-                    const nameMatch = message.message.conversation.match(/Nama Lengkap : (.*)/i);
-                    const ageMatch = message.message.conversation.match(/Usia : (.*)/i);
-                    const domisiliMatch = message.message.conversation.match(/Domisili : (.*)/i);
-                    const phoneMatch = message.message.conversation.match(/Nomor Hp : (.*)/i);
+                    const nameMatch = message.message.conversation.match(/Nama Lengkap :\s*(.*)/i);
+                    const ageMatch = message.message.conversation.match(/Usia :\s*(.*)/i);
+                    const domisiliMatch = message.message.conversation.match(/Domisili :\s*(.*)/i);
+                    const phoneMatch = message.message.conversation.match(/Nomor Hp :\s*(.*)/i);
 
-                    const userName = nameMatch ? nameMatch[1].trim() : '';
-                    const userAge = ageMatch ? ageMatch[1].trim() : '';
-                    const userDomisili = domisiliMatch ? domisiliMatch[1].trim() : '';
-                    const userPhone = phoneMatch ? phoneMatch[1].trim() : '';
+                    // Trim spasi di awal dan akhir serta dihapuskan semua spasi
+                    const userName = nameMatch ? nameMatch[1].replace(/\s+/g, '').trim() : '';
+                    const userAge = ageMatch ? ageMatch[1].replace(/\s+/g, '').trim() : '';
+                    const userDomisili = domisiliMatch ? domisiliMatch[1].replace(/\s+/g, '').trim() : '';
+                    const userPhone = phoneMatch ? phoneMatch[1].replace(/\s+/g, '').trim() : '';
 
                     // Periksa apakah nama lengkap, usia, domisili, dan nomor HP tidak kosong
                     if (userName && userAge && userDomisili && userPhone) {
@@ -125,6 +126,7 @@ async function connectionLogic() {
                         sock.sendMessage(message.key.remoteJid, responseMessage2);
                     }, 500);
                 }
+
 
                 if (validNumbers.includes(conversation)) {
                     if (message.message.conversation === '1') {
